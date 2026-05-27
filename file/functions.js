@@ -5,11 +5,28 @@ var $win = $(window);
 var clientWidth = $win.width();
 var clientHeight = $win.height();
 
+function fitStageToViewport() {
+	var stageWidth = 1100;
+	var stageHeight = 700;
+	var padding = 16;
+	var scale = Math.min(1, ($win.width() - padding) / stageWidth, ($win.height() - padding) / stageHeight);
+
+	if (!isFinite(scale) || scale <= 0) {
+		scale = 1;
+	}
+
+	document.documentElement.style.setProperty('--stage-scale', scale.toFixed(3));
+}
+
+fitStageToViewport();
+
 $(window).resize(function() {
     var newWidth = $win.width();
     var newHeight = $win.height();
-    if (newWidth != clientWidth && newHeight != clientHeight) {
-        location.replace(location);
+	if (newWidth != clientWidth || newHeight != clientHeight) {
+		clientWidth = newWidth;
+		clientHeight = newHeight;
+		fitStageToViewport();
     }
 });
 

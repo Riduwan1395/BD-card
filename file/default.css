@@ -5,6 +5,7 @@
   --secondary-color: #ff9aae;
   --text-color: #ffffff;
   --bg-overlay: rgba(255, 255, 255, 0.4);
+  --stage-scale: 1;
 }
 
 body {
@@ -30,16 +31,21 @@ body {
   justify-content: center;
   align-items: center;
   position: relative;
+  overflow: hidden;
 }
 
 #wrap {
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 1100px;
   height: 700px;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1;
+  transform: translate(-50%, -50%) scale(var(--stage-scale));
+  transform-origin: center center;
 }
 
 #canvas {
@@ -232,34 +238,30 @@ body {
   }
 }
 
-/* Mobile Responsiveness */
-@media (max-width: 1200px) {
-  #wrap {
-    width: 100%;
-    transform: scale(0.8);
-  }
-}
-
 @media (max-width: 768px) {
-  #wrap {
-    transform: scale(0.65);
-    flex-direction: column;
-  }
-
   #text {
-    position: relative;
-    left: 0;
-    top: 50px;
-    width: 85%;
-    margin: 0 auto;
-    padding: 30px;
+    width: 420px;
   }
 
-  #clock-box {
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 20px;
-    padding: 12px 25px;
-    font-size: 0.8rem;
+  .welcome-content {
+    width: min(90vw, 460px);
+    padding: 0 10px;
+  }
+
+  .welcome-content h1 {
+    font-size: 2.2rem;
+  }
+
+  .welcome-content p {
+    font-size: 1rem;
+  }
+
+  .heart-icon {
+    font-size: 4.5rem;
+  }
+
+  .open-btn {
+    padding: 14px 34px;
+    font-size: 1.05rem;
   }
 }
