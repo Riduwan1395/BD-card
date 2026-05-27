@@ -3,6 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>HBD love</title>
     <link type="text/css" rel="stylesheet" href="./file/default.css">
     <script type="text/javascript" src="./file/jquery.min.js"></script>
@@ -171,22 +172,38 @@
             var foot = tree.footer;
             var hold = 1;
 
-            canvas.click(function (e) {
-                var offset = canvas.offset(), x, y;
-                x = e.pageX - offset.left;
-                y = e.pageY - offset.top;
-                if (seed.hover(x, y)) {
+            function getCanvasPoint(event) {
+                var sourceEvent = event.originalEvent || event;
+                var point = sourceEvent.touches && sourceEvent.touches.length ? sourceEvent.touches[0] : sourceEvent;
+                var rect = canvas[0].getBoundingClientRect();
+                var scaleX = canvas[0].width / rect.width;
+                var scaleY = canvas[0].height / rect.height;
+
+                return {
+                    x: (point.clientX - rect.left) * scaleX,
+                    y: (point.clientY - rect.top) * scaleY
+                };
+            }
+
+            function handleSeedInteraction(event) {
+                var point = getCanvasPoint(event);
+
+                if (seed.hover(point.x, point.y)) {
+                    event.preventDefault();
                     hold = 0;
-                    canvas.unbind("click");
-                    canvas.unbind("mousemove");
+                    canvas.off('click touchstart pointerdown');
+                    canvas.off('mousemove touchmove pointermove');
                     canvas.removeClass('hand');
                 }
-            }).mousemove(function (e) {
-                var offset = canvas.offset(), x, y;
-                x = e.pageX - offset.left;
-                y = e.pageY - offset.top;
-                canvas.toggleClass('hand', seed.hover(x, y));
-            });
+            }
+
+            function handleSeedHover(event) {
+                var point = getCanvasPoint(event);
+                canvas.toggleClass('hand', seed.hover(point.x, point.y));
+            }
+
+            canvas.on('click touchstart pointerdown', handleSeedInteraction)
+                .on('mousemove touchmove pointermove', handleSeedHover);
 
             var seedAnimate = eval(Jscex.compile("async", function () {
                 seed.draw();
